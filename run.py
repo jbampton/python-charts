@@ -1,6 +1,7 @@
 from lxml import html
 import requests
 import datetime
+import os
 
 
 # build topic 2D array
@@ -68,6 +69,11 @@ page += """
   </body>
 </html>"""
 
-target = open('index.html', 'w')
+try:
+    os.makedirs('site')
+except OSError:
+    pass
+
+target = open('site/index.html', 'w')
 target.write(page)
 target.close()
