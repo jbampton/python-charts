@@ -27,3 +27,7 @@ deploy:
   local_dir: site
   on:
     branch:  master
+
+addons:
+    srcclr:
+        debug: true
