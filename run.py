@@ -2,7 +2,10 @@ from lxml import html
 import requests
 import datetime
 import os
+import time
 
+print("sleep for 30 seconds")
+time.sleep(30)
 
 # build topic 2D array
 def get_topics(topic_xpath, data):
@@ -30,7 +33,7 @@ while tree.xpath('//div[@class="pagination"]/a[@class="next_page"]'):
     tree = html.fromstring(page.content)
     data = get_topics(topic_xpath, data)
 
-data = sorted([[k,v] for k, v in data.items()], key=lambda d: d[1], reverse=True)
+data = sorted(([k,v] for k, v in data.items()), key=lambda d: d[1], reverse=True)
 
 print(data)
 
