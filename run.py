@@ -1,22 +1,32 @@
-from lxml import html
-import requests
+"""
+Top 100 most starred GitHub projects grouped by topic description and visualized as a
+interactive 3D pie chart in HTML 5 hosted on GitHub Pages using Google Charts JavaScript library.
+"""
+
 import datetime
 import os
 import time
+from lxml import html
+import requests
+
 
 print("sleep for 30 seconds")
 time.sleep(30)
 
-# build topic 2D array
+
 def get_topics(topic_xpath, data):
+    """
+    build topic 2D array
+    """
     topics = tree.xpath(topic_xpath)
     for x in topics:
         x = x.strip()
-        try:
+        if x in data:
             data[x] += 1
-        except:
+        else:
             data[x] = 1
     return data
+
 
 # most starred repositories first page
 page = requests.get('https://github.com/search?utf8=%E2%9C%93&q=stars%3A10000..1000000&type=Repositories')
@@ -33,7 +43,7 @@ while tree.xpath('//div[@class="pagination"]/a[@class="next_page"]'):
     tree = html.fromstring(page.content)
     data = get_topics(topic_xpath, data)
 
-data = sorted(([k,v] for k, v in data.items()), key=lambda d: d[1], reverse=True)
+data = sorted(([k, v] for k, v in data.items()), key=lambda d: d[1], reverse=True)
 
 print(data)
 
