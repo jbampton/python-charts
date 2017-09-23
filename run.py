@@ -1,6 +1,7 @@
 """
-Top 100 most starred GitHub projects grouped by topic description and visualized as a
-interactive 3D pie chart in HTML 5 hosted on GitHub Pages using Google Charts JavaScript library.
+Top 100 most starred GitHub projects grouped by topic description.
+
+Visualized as a interactive 3D pie chart in HTML 5 hosted on GitHub Pages using Google Charts JavaScript library.
 """
 
 import datetime
@@ -15,9 +16,7 @@ time.sleep(30)
 
 
 def get_topics(topic_xpath, data):
-    """
-    build topic 2D array
-    """
+    """Build topic 2D array."""
     topics = tree.xpath(topic_xpath)
     for x in topics:
         x = x.strip()
