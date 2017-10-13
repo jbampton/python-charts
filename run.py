@@ -1,7 +1,8 @@
 """
 Top 100 most starred GitHub projects grouped by topic description.
 
-Visualized as a interactive 3D pie chart in HTML 5 hosted on GitHub Pages using Google Charts JavaScript library.
+Visualized as a interactive 3D pie chart in HTML 5 hosted on GitHub Pages
+using Google Charts JavaScript library.
 """
 
 import datetime
@@ -37,7 +38,8 @@ get_topics()
 
 # retrieve total 10 pages of results based on GitHub limits
 while tree.xpath('//div[@class="pagination"]/a[@class="next_page"]'):
-    page = requests.get('https://github.com' + tree.xpath('//div[@class="pagination"]/a[@class="next_page"]/@href')[0])
+    page = requests.get('https://github.com' +
+                        tree.xpath('//div[@class="pagination"]/a[@class="next_page"]/@href')[0])
     tree = html.fromstring(page.content)
     get_topics()
 
