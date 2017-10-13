@@ -14,8 +14,14 @@ import requests
 print("sleep for 30 seconds")
 time.sleep(30)
 
+# most starred repositories first page
+page = requests.get('https://github.com/search?utf8=%E2%9C%93&q=stars%3A10000..1000000&type=Repositories')
+tree = html.fromstring(page.content)
+data = {}
+topic_xpath = '//div/a[contains(@class,"topic-tag")]/text()'
 
-def get_topics(topic_xpath, data):
+
+def get_topics():
     """Build topic 2D array."""
     topics = tree.xpath(topic_xpath)
     for x in topics:
@@ -24,26 +30,19 @@ def get_topics(topic_xpath, data):
             data[x] += 1
         else:
             data[x] = 1
-    return data
 
 
-# most starred repositories first page
-page = requests.get('https://github.com/search?utf8=%E2%9C%93&q=stars%3A10000..1000000&type=Repositories')
-tree = html.fromstring(page.content)
+# get first page of results
+get_topics()
 
-data = {}
-topic_xpath = '//div/a[contains(@class,"topic-tag")]/text()'
-
-data = get_topics(topic_xpath, data)
-
-# retrieve total 10 pages of results
+# retrieve total 10 pages of results based on GitHub limits
 while tree.xpath('//div[@class="pagination"]/a[@class="next_page"]'):
     page = requests.get('https://github.com' + tree.xpath('//div[@class="pagination"]/a[@class="next_page"]/@href')[0])
     tree = html.fromstring(page.content)
-    data = get_topics(topic_xpath, data)
+    get_topics()
+
 
 data = sorted(([k, v] for k, v in data.items()), key=lambda d: d[1], reverse=True)
-
 print(data)
 
 page = """<!DOCTYPE html>
