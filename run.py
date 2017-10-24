@@ -5,12 +5,12 @@ Visualized as a interactive 3D pie chart in HTML 5 hosted on GitHub Pages
 using Google Charts JavaScript library.
 """
 
-import datetime
-import os
+from datetime import datetime, timedelta
 import time
 from lxml import html
 import requests
-
+from pandas_datareader.data import DataReader
+import matplotlib.pyplot as plt
 
 print("sleep for 30 seconds")
 time.sleep(30)
@@ -20,7 +20,21 @@ page = requests.get('https://github.com/search?utf8=%E2%9C%93&q=stars%3A10000..1
 tree = html.fromstring(page.content)
 data = {}
 topic_xpath = '//div/a[contains(@class,"topic-tag")]/text()'
+now = datetime.now()
+start = (now - timedelta(days=365)).date()
+end = now.date()
+print(start)
+print(end)
 
+# Set the ticker
+ticker = 'AAPL'
+# Set the data source
+data_source = 'google'
+# Import the stock prices
+stock_prices = DataReader(ticker, data_source, start, end)
+# Plot Close
+stock_prices['Close'].plot(title=ticker)
+plt.savefig('site/images/apple.png')
 
 def get_topics():
     """Build topic 2D array."""
@@ -58,7 +72,10 @@ page = """<!DOCTYPE html>
   </head>
   <body>
     <div id="piechart_3d" style="width: 900px; height: 600px;"></div>
-    <footer>Last built: {t}</footer>""".format(t=datetime.datetime.now())
+    <div id="apple_chart">
+        <img src="images/apple.png" alt="Apple stock chart">
+    </div>
+    <footer>Last built: {t}</footer>""".format(t=datetime.now())
 page += """
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
@@ -81,11 +98,6 @@ page += """
     </script>
   </body>
 </html>"""
-
-try:
-    os.makedirs('site')
-except OSError:
-    pass
 
 target = open('site/index.html', 'w')
 target.write(page)
