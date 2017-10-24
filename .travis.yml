@@ -11,7 +11,7 @@ python:
   - "3.7-dev" # 3.7 development branch
   - "nightly" # currently points to 3.7-dev
 
-install: "pip install lxml requests datetime"
+install: "pip install lxml requests datetime pandas_datareader matplotlib"
 
 script:
   - python run.py
