@@ -40,8 +40,7 @@ for k, v in stock_prices['Close'].to_dict().items():
     k = int(time.mktime(k.timetuple()))
     t = datetime.fromtimestamp(k)
     apple_data.append([t.strftime('%Y-%m-%d'), v])
-# debug
-print(apple_data)
+
 
 
 def get_topics():
@@ -66,6 +65,10 @@ while tree.xpath('//div[@class="pagination"]/a[@class="next_page"]'):
 
 data = sorted(([k, v] for k, v in data.items()), key=lambda d: d[1], reverse=True)
 print(data)
+
+# debug
+apple_data = sorted(([k, v] for k, v in apple_data), key=lambda d: d[0])
+print(apple_data)
 
 page = """<!DOCTYPE html>
 <html>
