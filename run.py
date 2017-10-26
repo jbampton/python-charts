@@ -10,7 +10,7 @@ import time
 from lxml import html
 import requests
 from pandas_datareader.data import DataReader
-import matplotlib.pyplot as plt
+
 
 print("sleep for 30 seconds")
 time.sleep(30)
@@ -20,21 +20,29 @@ page = requests.get('https://github.com/search?utf8=%E2%9C%93&q=stars%3A10000..1
 tree = html.fromstring(page.content)
 data = {}
 topic_xpath = '//div/a[contains(@class,"topic-tag")]/text()'
+
+# start code for line chart
 now = datetime.now()
 start = (now - timedelta(days=365)).date()
 end = now.date()
+# debug
 print(start)
 print(end)
-
 # Set the ticker
-ticker = 'AAPL'
+ticker = 'AAPL'  #Apple
 # Set the data source
-data_source = 'google'
+data_source = 'google'  #use google finance
 # Import the stock prices
 stock_prices = DataReader(ticker, data_source, start, end)
-# Plot Close
-stock_prices['Close'].plot(title=ticker)
-plt.savefig('site/images/apple.png')
+# build the 2d array for the line chart
+apple_data = []
+for k, v in stock_prices['Close'].to_dict().items():
+    k = int(time.mktime(k.timetuple()))
+    t = datetime.fromtimestamp(k)
+    apple_data.append([t.strftime('%Y-%m-%d'), v])
+# debug
+print(apple_data)
+
 
 def get_topics():
     """Build topic 2D array."""
@@ -49,14 +57,12 @@ def get_topics():
 
 # get first page of results
 get_topics()
-
 # retrieve total 10 pages of results based on GitHub limits
 while tree.xpath('//div[@class="pagination"]/a[@class="next_page"]'):
     page = requests.get('https://github.com' +
                         tree.xpath('//div[@class="pagination"]/a[@class="next_page"]/@href')[0])
     tree = html.fromstring(page.content)
     get_topics()
-
 
 data = sorted(([k, v] for k, v in data.items()), key=lambda d: d[1], reverse=True)
 print(data)
@@ -72,15 +78,14 @@ page = """<!DOCTYPE html>
   </head>
   <body>
     <div id="piechart_3d" style="width: 900px; height: 600px;"></div>
-    <div id="apple_chart">
-        <img src="images/apple.png" alt="Apple stock chart">
-    </div>
+    <div id="apple_chart" style="width: 900px; height: 600px;"></div>
     <footer>Last built: {t}</footer>""".format(t=datetime.now())
 page += """
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
       google.charts.load("current", {packages:["corechart"]});
       google.charts.setOnLoadCallback(drawChart);
+      google.charts.setOnLoadCallback(drawChartApple);
       function drawChart() {
         var data = new google.visualization.DataTable();
         data.addColumn('string', 'Topic');
@@ -93,6 +98,20 @@ page += """
           is3D: true,
         };
         var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
+        chart.draw(data, options);
+      }
+      function drawChartApple() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Date');
+        data.addColumn('number', 'Price');"""
+page += """
+        data.addRows({data});""".format(data=apple_data)
+page += """
+        var options = {
+          title: 'Apple share price over the last year.',
+          is3D: true,
+        };
+        var chart = new google.visualization.LineChart(document.getElementById('apple_chart'));
         chart.draw(data, options);
       }
     </script>
