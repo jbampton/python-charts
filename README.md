@@ -15,3 +15,9 @@ Python based using:
 - [Google charts](https://developers.google.com/chart/)
 
 http://thebeast.me/python-web-scrape-github/
+
+## Powered by
+
+[![Python Powered](site/images/other/python-powered.png "Python Powered")](https://www.python.org/)
+
+[![Pycharm Powered](site/images/other/pycharm-logo.png "Pycharm Powered")](https://www.jetbrains.com/pycharm/)
