@@ -13,7 +13,7 @@ from pandas_datareader.data import DataReader
 
 
 print("sleep for 30 seconds")
-time.sleep(30)
+#time.sleep(30)
 
 # most starred repositories first page
 page = requests.get('https://github.com/search?utf8=%E2%9C%93&q=stars%3A10000..1000000&type=Repositories')
@@ -34,13 +34,23 @@ ticker = 'AAPL'  #Apple
 data_source = 'google'  #use google finance
 # Import the stock prices
 stock_prices = DataReader(ticker, data_source, start, end)
-# build the 2d array for the line chart
+#
 apple_data = []
+day_endings = {
+    1: 'st',
+    2: 'nd',
+    3: 'rd',
+    21: 'st',
+    22: 'nd',
+    23: 'rd',
+    31: 'st'
+}
+# build the 3 element sub arrays for the line chart
 for k, v in stock_prices['Close'].to_dict().items():
     k = int(time.mktime(k.timetuple()))
     t = datetime.fromtimestamp(k)
-    apple_data.append([t.strftime('%Y-%m-%d'), v])
-
+    # [date, price, tooltip]
+    apple_data.append([t.strftime('%Y-%m-%d'), v, '{d}\nPrice: {p}'.format(d=t.strftime('%A the %-d' + day_endings.get(int(t.strftime('%-d')), 'th') + ' of %B %Y'), p=v)])
 
 
 def get_topics():
@@ -63,11 +73,14 @@ while tree.xpath('//div[@class="pagination"]/a[@class="next_page"]'):
     tree = html.fromstring(page.content)
     get_topics()
 
+# sort by value descending
 data = sorted(([k, v] for k, v in data.items()), key=lambda d: d[1], reverse=True)
+# debug
 print(data)
 
+# sort by date ascending
+apple_data = sorted(([i, j, k] for i, j, k in apple_data), key=lambda d: d[0])
 # debug
-apple_data = sorted(([k, v] for k, v in apple_data), key=lambda d: d[0])
 print(apple_data)
 
 page = """<!DOCTYPE html>
@@ -98,7 +111,7 @@ page += """
 page += """
         var options = {
           title: 'Top 100 most starred GitHub repositories grouped by topic',
-          is3D: true,
+          is3D: true
         };
         var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
         chart.draw(data, options);
@@ -106,13 +119,14 @@ page += """
       function drawChartApple() {
         var data = new google.visualization.DataTable();
         data.addColumn('string', 'Date');
-        data.addColumn('number', 'Price');"""
+        data.addColumn('number', 'Price');
+        data.addColumn({type: 'string', role: 'tooltip'});"""
 page += """
         data.addRows({data});""".format(data=apple_data)
 page += """
         var options = {
           title: 'Apple share price over the last year.',
-          is3D: true,
+          is3D: true
         };
         var chart = new google.visualization.LineChart(document.getElementById('apple_chart'));
         chart.draw(data, options);
