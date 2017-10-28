@@ -91,11 +91,20 @@ page = """<!DOCTYPE html>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>Python Charts</title>
+    <link rel="stylesheet" href="assets/bootstrap-4.0.0-beta.2-dist/css/bootstrap.min.css">
+    <style>
+        .chart { width: 100%; min-height: 450px; }
+    </style>
   </head>
   <body>
-    <div id="piechart_3d" style="width: 900px; height: 600px;"></div>
-    <div id="apple_chart" style="width: 900px; height: 600px;"></div>
-    <footer>Last built: {t}</footer>""".format(t=datetime.now())
+    <div class="row">
+        <div class="col-md-12">
+            <div id="piechart_3d" class="chart"></div>
+            <div id="apple_chart" class="chart"></div>
+        </div>
+    </div>
+    """
+page += """<footer>Last built: {t}</footer>""".format(t=datetime.now())
 page += """
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
@@ -132,6 +141,16 @@ page += """
         chart.draw(data, options);
       }
     </script>
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="assets/js/jquery-3.2.1.min.js"></script>
+    <script src="assets/js/popper-1.12.6.min.js"></script> 
+    <script src="assets/bootstrap-4.0.0-beta.2-dist/js/bootstrap.min.js"></script>
+    <script>
+      $(window).resize(function(){
+        drawChart();
+        drawChartApple();
+      });
+    </script>   
   </body>
 </html>"""
 
