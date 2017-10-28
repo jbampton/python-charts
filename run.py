@@ -12,8 +12,8 @@ import requests
 from pandas_datareader.data import DataReader
 
 
-print("sleep for 30 seconds")
-#time.sleep(30)
+print("sleep for 45 seconds")
+time.sleep(45)
 
 # most starred repositories first page
 page = requests.get('https://github.com/search?utf8=%E2%9C%93&q=stars%3A10000..1000000&type=Repositories')
@@ -127,15 +127,33 @@ page += """
       }
       function drawChartApple() {
         var data = new google.visualization.DataTable();
-        data.addColumn('string', 'Date');
+        data.addColumn('date', 'Date');
         data.addColumn('number', 'Price');
         data.addColumn({type: 'string', role: 'tooltip'});"""
 page += """
-        data.addRows({data});""".format(data=apple_data)
-page += """
+        var arr = {data}""".format(data=apple_data)
+page += """        
+        for(var i=0; i<arr.length; i++){
+            var arr_date = arr[i][0].split('-');
+            arr[i][0] = new Date(arr_date[0], parseInt(arr_date[1])-1, arr_date[2]);
+        }        
+        data.addRows(arr);
         var options = {
           title: 'Apple share price over the last year.',
-          is3D: true
+          is3D: true,
+          legend: {position: 'top', alignment: 'start'},
+          selectionMode: 'multiple',
+          trendlines: {
+            0: {
+              type: 'linear',
+              color: 'green',
+              lineWidth: 3,
+              opacity: 0.3,
+              tooltip: false,
+              labelInLegend: 'Trend Line',
+              visibleInLegend: true
+            }
+          }
         };
         var chart = new google.visualization.LineChart(document.getElementById('apple_chart'));
         chart.draw(data, options);
