@@ -17,7 +17,9 @@ Created using:
 - [JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 - [XPath](https://www.w3.org/TR/1999/REC-xpath-19991116/)
 - [HTML 5](https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/HTML5)
-- [Github Pages](https://pages.github.com/)
+- [jQuery](https://jquery.com/)
+- [Bootstrap](http://getbootstrap.com/)
+- [GitHub Pages](https://pages.github.com/)
 
 
 ## Powered by
