@@ -87,7 +87,7 @@ apple_data = sorted(([i, j, k] for i, j, k in apple_data), key=lambda x: x[0])
 print(apple_data)
 
 page = """<!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -108,7 +108,7 @@ page = """<!DOCTYPE html>
             <div id="apple_chart" class="chart"></div>
         </div>
         <div class="col-md-12">
-            <a target="_blank" href="https://info.flagcounter.com/a7We">
+            <a target="_blank" href="https://info.flagcounter.com/a7We" rel="noopener">
                 <img src="https://s05.flagcounter.com/count2/a7We/bg_FFFFFF/txt_000000/border_CCCCCC/columns_3/maxflags_200/viewers_0/labels_1/pageviews_0/flags_0/percent_0/" 
                      alt="Flag Counter">
             </a>
