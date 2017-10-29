@@ -2,6 +2,8 @@
 
 [![Build Status](https://travis-ci.org/jbampton/python-web-scrape-github.svg?branch=gh-pages)](https://travis-ci.org/jbampton/python-web-scrape-github)
 
+http://thebeast.me/python-charts/
+
 The first chart shows the top 100 most starred GitHub projects grouped by topic description displayed as a pie chart.
 
 The second chart is the Apple share price over the last year displayed as a line chart.
@@ -17,7 +19,6 @@ Created using:
 - [HTML 5](https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/HTML5)
 - [Github Pages](https://pages.github.com/)
 
-http://thebeast.me/python-web-scrape-github/
 
 ## Powered by
 
