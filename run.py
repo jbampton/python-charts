@@ -32,9 +32,9 @@ end = now.date()
 print(start)
 print(end)
 # Set the ticker
-ticker = 'AAPL'  #Apple
+ticker = 'AAPL'  # Apple
 # Set the data source
-data_source = 'google'  #use google finance
+data_source = 'google'  # use google finance
 # Import the stock prices
 stock_prices = DataReader(ticker, data_source, start, end)
 #
@@ -76,13 +76,13 @@ while tree.xpath('//div[@class="pagination"]/a[@class="next_page"]'):
     tree = html.fromstring(page.content)
     get_topics()
 
-# sort by value descending
-data = sorted(([k, v] for k, v in data.items()), key=lambda d: d[1], reverse=True)
+# sort first by value descending and then by topic alphabetically
+data = sorted(([k, v] for k, v in data.items()), key=lambda x: (-x[1], x[0]))
 # debug
 print(data)
 
 # sort by date ascending
-apple_data = sorted(([i, j, k] for i, j, k in apple_data), key=lambda d: d[0])
+apple_data = sorted(([i, j, k] for i, j, k in apple_data), key=lambda x: x[0])
 # debug
 print(apple_data)
 
@@ -97,11 +97,12 @@ page = """<!DOCTYPE html>
     <link rel="stylesheet" href="assets/bootstrap-4.0.0-beta.2-dist/css/bootstrap.min.css">
     <style>
         .chart { width: 100%; min-height: 450px; }
+        h1 { width: 100%; }
     </style>
   </head>
   <body>
     <div class="row">
-        <h1>Python interactive charting demo</h1>
+        <h1 class="text-center">Python interactive charting demo</h1>
         <div class="col-md-12">
             <div id="topic_chart" class="chart"></div>
             <div id="apple_chart" class="chart"></div>
