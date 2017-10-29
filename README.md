@@ -1,6 +1,6 @@
 # Python Interactive 3D charting showcase  
 
-[![Build Status](https://travis-ci.org/jbampton/python-charts/.svg?branch=gh-pages)](https://travis-ci.org/jbampton/python-charts)
+[![Build Status](https://travis-ci.org/jbampton/python-charts.svg?branch=gh-pages)](https://travis-ci.org/jbampton/python-charts)
 
 http://thebeast.me/python-charts/
 
