@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+
+
 """
 Top 100 most starred GitHub projects grouped by topic description.
 
