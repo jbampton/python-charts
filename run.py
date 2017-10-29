@@ -101,12 +101,16 @@ page = """<!DOCTYPE html>
   </head>
   <body>
     <div class="row">
+        <h1>Python interactive charting demo</h1>
         <div class="col-md-12">
             <div id="topic_chart" class="chart"></div>
             <div id="apple_chart" class="chart"></div>
         </div>
         <div class="col-md-12">
-            <a target="_blank" href="https://info.flagcounter.com/a7We"><img src="https://s05.flagcounter.com/count2/a7We/bg_FFFFFF/txt_000000/border_CCCCCC/columns_3/maxflags_200/viewers_0/labels_1/pageviews_0/flags_0/percent_0/" alt="Flag Counter" border="0"></a>
+            <a target="_blank" href="https://info.flagcounter.com/a7We">
+                <img src="https://s05.flagcounter.com/count2/a7We/bg_FFFFFF/txt_000000/border_CCCCCC/columns_3/maxflags_200/viewers_0/labels_1/pageviews_0/flags_0/percent_0/" 
+                     alt="Flag Counter">
+            </a>
         </div>
     </div>
     """
