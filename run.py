@@ -97,12 +97,18 @@ page = """<!DOCTYPE html>
     <link rel="stylesheet" href="assets/bootstrap-4.0.0-beta.2-dist/css/bootstrap.min.css">
     <style>
         .chart { width: 100%; min-height: 450px; }
-        h1 { width: 100%; }
+        p { font-size: 2.5rem; }
+        .logo { float: left; }
     </style>
   </head>
   <body>
     <div class="row">
-        <h1 class="text-center">Python interactive charting demo</h1>
+        <div class="col-md-12">
+            <a href="./" class="logo">
+                <img src="images/other/python-powered.png" alt="Python Powered Logo" title="Python Powered">
+            </a>
+            <p class="text-center">Python interactive charting demo</p>
+        </div>
         <div class="col-md-12">
             <div id="topic_chart" class="chart"></div>
             <div id="apple_chart" class="chart"></div>
