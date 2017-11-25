@@ -13,6 +13,7 @@ import time
 from lxml import html
 import requests
 from pandas_datareader.data import DataReader
+import pandas as pd
 
 
 print("sleep for 45 seconds")
@@ -31,6 +32,7 @@ end = now.date()
 # debug
 print(start)
 print(end)
+
 # Set the ticker
 ticker = 'AAPL'  # Apple
 # Set the data source
@@ -55,16 +57,40 @@ for k, v in stock_prices['Close'].to_dict().items():
     # [date, price, tooltip]
     apple_data.append([t.strftime('%Y-%m-%d'), v, '{d}\nPrice: {p}'.format(d=t.strftime('%A the %-d' + day_endings.get(int(t.strftime('%-d')), 'th') + ' of %B %Y'), p=v)])
 
+# third chart
+series = 'DCOILWTICO' # West Texas Intermediate Oil Price
+oil = DataReader(series, 'fred', start)
+ticker = 'XOM' # Exxon Mobile Corporation
+stock = DataReader(ticker, 'google', start)
+
+exxon = pd.concat([stock[['Close']], oil], axis=1)
+exxon.columns = ['Exxon', 'Oil Price']
+
+exxon_data = []
+for k, v in exxon.to_dict().items():
+    i = 0
+    for x, y in v.items():
+        z = int(time.mktime(x.timetuple()))
+        t = datetime.fromtimestamp(z)
+        # [date, exxon, oil]
+        if pd.isna(y):
+            y = 'None'
+        if k == 'Exxon':
+            exxon_data.append([t.strftime('%Y-%m-%d'), y, 0])
+        else:
+            exxon_data[i][2] = y
+        i += 1
+
 
 def get_topics():
     """Build topic 2D array."""
     topics = tree.xpath(topic_xpath)
-    for x in topics:
-        x = x.strip()
-        if x in data:
-            data[x] += 1
+    for topic in topics:
+        y = topic.strip()
+        if y in data:
+            data[y] += 1
         else:
-            data[x] = 1
+            data[y] = 1
 
 
 # get first page of results
@@ -112,6 +138,7 @@ page = """<!DOCTYPE html>
         <div class="col-md-12">
             <div id="topic_chart" class="chart"></div>
             <div id="apple_chart" class="chart"></div>
+            <div id="exxon_chart" class="chart"></div>
         </div>
         <div class="col-md-12">
             <a target="_blank" href="https://info.flagcounter.com/a7We" rel="noopener">
@@ -128,6 +155,7 @@ page += """
       google.charts.load("current", {packages:["corechart"]});
       google.charts.setOnLoadCallback(drawChart);
       google.charts.setOnLoadCallback(drawChartApple);
+      google.charts.setOnLoadCallback(drawChartExxon);
       function drawChart() {
         var data = new google.visualization.DataTable();
         data.addColumn('string', 'Topic');
@@ -149,7 +177,7 @@ page += """
         data.addColumn({type: 'string', role: 'tooltip'});"""
 page += """
         var arr = {data}""".format(data=apple_data)
-page += """        
+page += """
         for(var i=0; i<arr.length; i++){
             var arr_date = arr[i][0].split('-');
             arr[i][0] = new Date(arr_date[0], parseInt(arr_date[1])-1, arr_date[2]);
@@ -175,6 +203,56 @@ page += """
         var chart = new google.visualization.LineChart(document.getElementById('apple_chart'));
         chart.draw(data, options);
       }
+      function drawChartExxon() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('date', 'Date');
+        data.addColumn('number', 'Exxon');
+        data.addColumn('number', 'Oil');"""
+page += """
+        var arr = {data}""".format(data=exxon_data)
+page += """
+        for(var i=0; i<arr.length; i++){
+            var arr_date = arr[i][0].split('-');
+            arr[i][0] = new Date(arr_date[0], parseInt(arr_date[1])-1, arr_date[2]);
+            
+            if(arr[i][1] === 'None'){
+                arr[i][1] = null;
+            }
+            if(arr[i][2] === 'None'){
+                arr[i][2] = null;
+            }
+        }        
+        data.addRows(arr);
+        var options = {
+          title: 'Exxon share price versus oil price over the last year.',
+          is3D: true,
+          interpolateNulls: true,
+          legend: {position: 'top', alignment: 'start'},
+          selectionMode: 'multiple',
+          trendlines: {
+            0: {
+              type: 'linear',
+              color: 'green',
+              lineWidth: 3,
+              opacity: 0.3,
+              tooltip: false,
+              labelInLegend: 'Exxon Trend Line',
+              visibleInLegend: true
+            },
+            1: {
+              type: 'linear',
+              color: 'green',
+              lineWidth: 3,
+              opacity: 0.3,
+              tooltip: false,
+              labelInLegend: 'Oil Trend Line',
+              visibleInLegend: true
+            }
+          }
+        };
+        var chart = new google.visualization.LineChart(document.getElementById('exxon_chart'));
+        chart.draw(data, options);
+      }
     </script>
     <!-- Latest compiled and minified JavaScript -->
     <script src="assets/js/jquery-3.2.1.min.js"></script>
@@ -184,6 +262,7 @@ page += """
       $(window).resize(function(){
         drawChart();
         drawChartApple();
+        drawChartExxon();
       });
     </script>   
   </body>
