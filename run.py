@@ -20,7 +20,8 @@ print("sleep for 45 seconds")
 time.sleep(45)
 
 # most starred repositories first page
-page = requests.get('https://github.com/search?utf8=%E2%9C%93&q=stars%3A10000..1000000&type=Repositories')
+page = requests.get('https://github.com/search?utf8=%E2%9C%93&q=\
+                    stars%3A10000..1000000&type=Repositories')
 tree = html.fromstring(page.content)
 data = {}
 topic_xpath = '//div/a[contains(@class,"topic-tag")]/text()'
@@ -55,12 +56,18 @@ for k, v in stock_prices['Close'].to_dict().items():
     k = int(time.mktime(k.timetuple()))
     t = datetime.fromtimestamp(k)
     # [date, price, tooltip]
-    apple_data.append([t.strftime('%Y-%m-%d'), v, '{d}\nPrice: {p}'.format(d=t.strftime('%A the %-d' + day_endings.get(int(t.strftime('%-d')), 'th') + ' of %B %Y'), p=v)])
+    apple_data.append([t.strftime('%Y-%m-%d'),
+                       v,
+                       '{d}\nPrice: {p}'.format(
+                           d=t.strftime(
+                               '%A the %-d' +
+                               day_endings.get(int(t.strftime('%-d')), 'th') + ' of %B %Y'),
+                           p=v)])
 
 # third chart
-series = 'DCOILWTICO' # West Texas Intermediate Oil Price
+series = 'DCOILWTICO'  # West Texas Intermediate Oil Price
 oil = DataReader(series, 'fred', start)
-ticker = 'XOM' # Exxon Mobile Corporation
+ticker = 'XOM'  # Exxon Mobile Corporation
 stock = DataReader(ticker, 'google', start)
 
 exxon = pd.concat([stock[['Close']], oil], axis=1)
@@ -73,12 +80,13 @@ for k, v in exxon.to_dict().items():
         z = int(time.mktime(x.timetuple()))
         t = datetime.fromtimestamp(z)
         # [date, exxon, oil]
-        if pd.isna(y):
-            y = 'None'
+        j = y
+        if pd.isna(j):
+            j = 'None'
         if k == 'Exxon':
-            exxon_data.append([t.strftime('%Y-%m-%d'), y, 0])
+            exxon_data.append([t.strftime('%Y-%m-%d'), j, 0])
         else:
-            exxon_data[i][2] = y
+            exxon_data[i][2] = j
         i += 1
 
 
@@ -86,11 +94,11 @@ def get_topics():
     """Build topic 2D array."""
     topics = tree.xpath(topic_xpath)
     for topic in topics:
-        y = topic.strip()
-        if y in data:
-            data[y] += 1
+        top = topic.strip()
+        if top in data:
+            data[top] += 1
         else:
-            data[y] = 1
+            data[top] = 1
 
 
 # get first page of results
@@ -268,6 +276,5 @@ page += """
   </body>
 </html>"""
 
-target = open('site/index.html', 'w')
-target.write(page)
-target.close()
+with open('site/index.html', 'w') as f:
+    f.write(page)
