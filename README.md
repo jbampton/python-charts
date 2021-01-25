@@ -2,8 +2,6 @@
 
 [![Build Status](https://travis-ci.org/jbampton/python-charts.svg?branch=gh-pages)](https://travis-ci.org/jbampton/python-charts)
 
-http://thebeast.me/python-charts/
-
 The first chart shows the top 100 most starred GitHub projects grouped by topic description displayed as a pie chart.
 
 The second chart is the Apple share price over the last year displayed as a line chart and the data is sourced from Google finance.
